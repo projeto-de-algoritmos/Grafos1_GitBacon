@@ -1,0 +1,72 @@
+<mat-card class="row w-100 d-flex justify-content-center">
+    <mat-card-title>
+        <div class="col-lg-12 text-center py-2">
+            GitBacon
+        </div>
+
+    </mat-card-title>
+    <mat-card-subtitle class="text-center">
+        <div class="row">
+            <div class="col-lg-8 text-right">
+                Grafos 1 - Projeto de Algoritmos, UnB 1º/2023.
+            </div>
+            <div class="col-lg-4 d-flex justify-content-end">
+                <a href="https://github.com/projeto-de-algoritmos/Grafos1_GitBacon" class="pr-4">
+                    <img src="https://github.com/favicon.ico" alt="Código Fonte" matTooltip="Código fonte no Github">
+                </a>
+            </div>
+        </div>
+
+    </mat-card-subtitle>
+    <app-info-component class="d-flex align-content-center py-2"/>
+    <mat-card-content class="d-flex align-content-center py-2 col-lg-12">
+        <mat-card class="col-lg-12 d-flex justify-content-center align-content-center py-2">
+            <mat-card-title>
+                <div class="col-lg-12 text-center py-2">
+                    Busque a ligação entre dois usuários
+                </div>
+            </mat-card-title>
+            <mat-card-content class="d-flex m-0 p-0 align-content-center justify-content-center">
+                <div class="row d-flex col-lg-12 justify-content-center">
+                    <div class="row col-lg-12">
+                        <div class="col-lg-5 p-0 m-0 w-100 d-flex justify-content-center">
+                            <app-avatar #userB [username]="usuarioB"></app-avatar>
+                        </div>
+                        <div class="col-lg-2 p-0 m-0 h-100 d-flex justify-content-center w-100">
+                            <mat-icon class="align-self-center text-size-lg"> arrow_right_alt</mat-icon>
+                        </div>
+                        <div class="col-lg-5 p-0 m-0 w-100 d-flex justify-content-center">
+                            <app-avatar #userA [username]="usuarioA"></app-avatar>
+                        </div>
+
+                    </div>
+                    <form class="row col-lg-12"
+                          [formGroup]="formBusca"
+                          *ngIf="formBusca">
+                        <div class="col-lg-5">
+                            <mat-form-field class="w-100" appearance="outline">
+                                <mat-label> Usuário do GitHub</mat-label>
+                                <input matInput formControlName="usuarioA" (focusout)="searchUser('usuarioA')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-lg-2 d-flex justify-content-center">
+                            <button mat-mini-fab color="primary" class="align-self-center" (click)="swap()">
+                                <mat-icon>swap_horiz</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-lg-5">
+                            <mat-form-field class="w-100 v-100"
+                                            appearance="outline">
+                                <mat-label> Usuário do GitHub</mat-label>
+                                <input matInput formControlName="usuarioB"
+                                       (focusout)="searchUser('usuarioB')">
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-card-content>
+</mat-card>
+
+
