@@ -1,0 +1,22 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: All things angular
+        uses: AhsanAyaz/angular-deploy-gh-pages-actions@[version]
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          build_configuration: production
+          base_href: /Grafos1_GitBacon/
+          deploy_branch: gh-pages
+          angular_dist_build_folder: dist/Grafos1_GitBacon/
+
+permissions:
+  contents: write
