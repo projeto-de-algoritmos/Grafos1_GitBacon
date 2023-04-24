@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: All things angular
-        uses: AhsanAyaz/angular-deploy-gh-pages-actions@[version]
+        uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.4.0
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           build_configuration: production
