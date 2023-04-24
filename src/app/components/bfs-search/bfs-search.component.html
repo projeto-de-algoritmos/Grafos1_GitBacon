@@ -1,0 +1,23 @@
+<mat-card>
+    <div class="terminal w-100 px-2 h-25 ">
+        <div *ngFor="let message of getLastMessages(5)" [innerHTML]="message">
+        </div>
+    </div>
+</mat-card>
+
+<div *ngIf="path" class="py-2">
+    <h3>
+        O número de Kevin Bacon entre {{userOrigin}} e {{userTarget}} é {{kevinBaconNumber}}.
+    </h3>
+    <div *ngFor="let user of path.slice(0, path.length - 1)" class="d-flex justify-content-center col-12">
+        <app-avatar [user]="user" [isSmall]="true" [showArrow]="true"/>
+    </div>
+    <div class="d-flex justify-content-center col-12">
+        <app-avatar [user]="path[path.length-1]" [isSmall]="true"/>
+
+    </div>
+
+
+</div>
+
+

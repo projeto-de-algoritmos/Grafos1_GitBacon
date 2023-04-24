@@ -8,13 +8,15 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCardModule} from "@angular/material/card";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {BfsSearchComponent} from "./bfs-search/bfs-search.component";
 
 
 @NgModule({
-    declarations: [AvatarComponent, InfoComponentComponent],
+    declarations: [AvatarComponent, InfoComponentComponent, BfsSearchComponent],
     exports: [
         AvatarComponent,
-        InfoComponentComponent
+        InfoComponentComponent,
+        BfsSearchComponent
     ],
     imports: [
         CommonModule,
@@ -23,7 +25,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
         MatIconModule,
         MatSnackBarModule,
         MatCardModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+
     ]
 })
 export class ComponentsModule {

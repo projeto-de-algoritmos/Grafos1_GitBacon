@@ -1,21 +1,22 @@
-<div class="w-100 h-100 d-flex py-2">
-    <mat-spinner *ngIf="loading">
-    </mat-spinner>
-    <div class="row d-flex  justify-content-center" *ngIf="!loading">
-        <div class="row col-lg-12">
-            <div class="col-lg-12">
-                <img [src]="avatarSrc" alt="Imagem do usuário {{username? username : ''}} no Github."
-                     *ngIf="showAvatar">
-                <img src="./assets/undefined_user.png"
-                     alt="Imagem do usuário {{username? username : ''}}"
-                     matTooltip="Imagem do usuário {{username? username : ''}}"
-                     *ngIf="!showAvatar">
-            </div>
-        </div>
-        <div class="row py-2">
-            <div class="col-lg-12">
-                <a [href]="githubUser" style="color: #cbcbd2" [matTooltip]="githubUser"
-                   *ngIf="showAvatar">  {{username}} </a>
+<mat-spinner *ngIf="loading" [ngClass]="isSmall? 'small' : ''">
+</mat-spinner>
+<div class="row col-12 d-flex justify-content-center" *ngIf="!loading">
+    <div class="row col-12">
+        <div >
+            <a [href]="githubUser">
+                <img [src]="avatarSrc"
+                     alt="Imagem do usuário {{login}} no Github."
+                     *ngIf="showAvatar"
+                     [ngClass]="isSmall? 'small' : ''"
+                >
+            </a>
+            <img src="./assets/undefined_user.png"
+                 alt="Imagem genérica de usuário."
+                 *ngIf="!showAvatar"
+                 [ngClass]="isSmall? 'small' : ''"
+            >
+            <div *ngIf="showArrow" class="col-12 justify-content-center" >
+                <mat-icon class="text-size py-1">arrow_downward</mat-icon>
             </div>
         </div>
     </div>

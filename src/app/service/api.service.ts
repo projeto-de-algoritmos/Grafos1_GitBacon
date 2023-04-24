@@ -16,8 +16,6 @@ export class ApiService {
     })
 
     constructor(private http: HttpClient) {
-
-
     }
 
 
@@ -27,18 +25,10 @@ export class ApiService {
     }
 
 
-    public getAvatar(username: string): Promise<string> {
-
-        return new Promise<string>(resolve => {
-            this.http.get(`${this.BASE_URL}/${username}`, {headers: this.httpOptions})
-                .subscribe(
-                    value => {
-                        const user = value as GitUser;
-                        resolve(user.avatar_url);
-                    }
-                )
-        });
-
+    public getFollowing(username: string): Observable<GitUser[]> {
+        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/following`,
+            {headers: this.httpOptions});
     }
+
 
 }

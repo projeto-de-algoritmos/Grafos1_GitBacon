@@ -30,8 +30,13 @@ Descreva os objetivos do seu projeto e como ele funciona.
 Adicione 3 ou mais screenshots do projeto em funcionamento.
 
 ## Instalação 
-**Linguagem**: xxxxxx<br>
-**Framework**: (caso exista)<br>
+**Linguagem**: Typescript<br>
+**Framework**: Angular<br>
+
+Instalar node@20.0.0
+Instalar angular globalmente@15.2.0
+Instalar dependências do projeto
+Pra rodar os arquivos .ts -> install ts-node global (-g)
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
 ## Uso 
