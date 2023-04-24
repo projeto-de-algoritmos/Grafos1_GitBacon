@@ -16,7 +16,7 @@ jobs:
           build_configuration: production
           base_href: /Grafos1_GitBacon/
           deploy_branch: gh-pages
-          angular_dist_build_folder: dist/Grafos1_GitBacon/
+          angular_dist_build_folder: dist/grafos1-git-bacon/
 
 permissions:
   contents: write
