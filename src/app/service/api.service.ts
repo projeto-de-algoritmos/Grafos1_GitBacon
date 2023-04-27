@@ -16,8 +16,6 @@ export class ApiService {
     })
 
     constructor(private http: HttpClient) {
-
-
     }
 
 
@@ -26,19 +24,20 @@ export class ApiService {
             {headers: this.httpOptions})
     }
 
+    public getFollowers(username: string): Observable<GitUser[]> {
+        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/followers`,
+            {headers: this.httpOptions});
+    }
 
-    public getAvatar(username: string): Promise<string> {
+    public getFollowing(username: string, per_page: number = 1000, page: number = 0): Observable<GitUser[]> {
+        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/following?per_page=${per_page}`,
+            {headers: this.httpOptions});
+    }
 
-        return new Promise<string>(resolve => {
-            this.http.get(`${this.BASE_URL}/${username}`, {headers: this.httpOptions})
-                .subscribe(
-                    value => {
-                        const user = value as GitUser;
-                        resolve(user.avatar_url);
-                    }
-                )
-        });
-
+    // Status code = 204 -> Following, 404 -> Not following;
+    public isFollowing(username: string, target_user: string): Observable<any> {
+        return this.http.get(`${this.BASE_URL}/user/${username}/following/${target_user}`,
+            {headers: this.httpOptions});
     }
 
 }
