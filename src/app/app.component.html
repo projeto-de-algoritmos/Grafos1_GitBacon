@@ -3,7 +3,6 @@
         <div class="col-lg-12 text-center py-2">
             GitBacon
         </div>
-
     </mat-card-title>
     <mat-card-subtitle class="text-center">
         <div class="row">
@@ -30,15 +29,14 @@
                 <div class="row d-flex col-lg-12 justify-content-center">
                     <div class="row col-lg-12">
                         <div class="col-lg-5 p-0 m-0 w-100 d-flex justify-content-center">
-                            <app-avatar #userB [username]="usuarioB"></app-avatar>
+                            <app-avatar [user]="usuarioA | async"></app-avatar>
                         </div>
                         <div class="col-lg-2 p-0 m-0 h-100 d-flex justify-content-center w-100">
                             <mat-icon class="align-self-center text-size-lg"> arrow_right_alt</mat-icon>
                         </div>
                         <div class="col-lg-5 p-0 m-0 w-100 d-flex justify-content-center">
-                            <app-avatar #userA [username]="usuarioA"></app-avatar>
+                            <app-avatar [user]="usuarioB | async"></app-avatar>
                         </div>
-
                     </div>
                     <form class="row col-lg-12"
                           [formGroup]="formBusca"
@@ -46,7 +44,10 @@
                         <div class="col-lg-5">
                             <mat-form-field class="w-100" appearance="outline">
                                 <mat-label> Usuário do GitHub</mat-label>
-                                <input matInput formControlName="usuarioA" (focusout)="searchUser('usuarioA')">
+                                <input matInput formControlName="usuarioA"
+                                       (focusout)="searchUser(lblUserA)"
+                                       required
+                                >
                             </mat-form-field>
                         </div>
                         <div class="col-lg-2 d-flex justify-content-center">
@@ -59,10 +60,35 @@
                                             appearance="outline">
                                 <mat-label> Usuário do GitHub</mat-label>
                                 <input matInput formControlName="usuarioB"
-                                       (focusout)="searchUser('usuarioB')">
+                                       (focusout)="searchUser(lblUserB)"
+                                       required>
                             </mat-form-field>
                         </div>
                     </form>
+
+                    <div class="row">
+
+                        <ng-container *ngIf="usuarioA | async">
+                            <mat-card class="col-lg-12">
+                                <mat-card-title>Camada L1</mat-card-title>
+
+
+                                <div class="d-flex col-lg-12 w-25 h-100">
+                                    <app-avatar
+                                            *ngFor="let user of usuarioAFollowing"
+                                            [user]="user"
+                                            [isSmall]="true"
+                                    ></app-avatar>
+                                </div>
+                            </mat-card>
+
+                            <!--                        <div #l1> Usuários seguidos pelo usuário {{formBusca.get(lblUserA)?.value }} </div>-->
+
+                        </ng-container>
+
+
+                    </div>
+
                 </div>
             </mat-card-content>
         </mat-card>
