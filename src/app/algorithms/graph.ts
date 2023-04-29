@@ -1,121 +1,103 @@
-class Graph<T> {
-    public adjacency_list: Map<T, Set<T>>;
-
-    constructor() {
-        this.adjacency_list = new Map<T, Set<T>>()
-    }
-
-    public addEdge(x: T, y: T) {
-        this.adjacency_list.has(x) ? this.adjacency_list.get(x)!.add(y) : this.adjacency_list.set(x, new Set([y]));
-        this.adjacency_list.has(y) ? this.adjacency_list.get(y)!.add(x) : this.adjacency_list.set(y, new Set([x]));
-    }
-
-    public addEdgesFromNode(key: T, edges: T[]) {
-        for (const e of edges)
-            this.addEdge(key, e)
-
-    }
-
-    public getEdges(key: T): T[] {
-        let values: T[] = []
-        this.adjacency_list.get(key)!.forEach(edge => values.push(edge))
-        return values;
-    }
-
-
-    public getNodes(): Set<T> {
-        let nodes: Set<T> = new Set<T>()
-        this.adjacency_list.forEach((value, key) => {
-            nodes.add(key)
-        })
-        return nodes;
-    }
-
-
-    public getAdjacents(key: T): Set<T> | null {
-        return this.adjacency_list.get(key)!;
-    }
-
-    public print() {
-        for (const key of this.adjacency_list.keys()) {
-            console.log(`${key}: ${this.getEdges(key)}`)
-        }
-    }
-
+let grafo2 = {
+    3: [1, 9, 2],
+    1: [2, 3, 4, 7],
+    2: [5, 7, 10],
+    4: [5, 6],
+    5: [],
+    6: [8, 9],
+    7: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    8: [6, 9],
+    9: [10, 7, 8],
+    10: [1]
 }
 
-class Queue<T> {
-    public queue: T[] = [];
-
-    get length() {
-        return this.queue.length;
-    }
-
-    public push(value: T) {
-        this.queue.push(value);
-    }
-
-    public pop(): T {
-        let value: T = this.queue[this.queue.length - 1];
-        this.queue.splice(this.queue.length - 1)
-        return value;
-    }
-
-    public print() {
-        console.log(this.queue.toString())
-    }
-
-}
-
-let graph: Graph<number> = new Graph();
-
-
-let printSet = (set: Set<any>) => {
-    let keys = []
-    for (const key in set.keys()) {
-        keys.push(key)
-    }
-    console.log(keys.toString())
+let grafo = {
+    1: [2],
+    2: [3],
+    3: [1,5],
+    4: [1],
+    5: []
 }
 
 
-graph.addEdgesFromNode(1, [4, 5, 2])
-graph.addEdgesFromNode(2, [6, 1, 4])
-graph.addEdge(3, 7)
-graph.addEdgesFromNode(4, [1, 2, 5])
-graph.addEdgesFromNode(5, [4, 1])
-graph.addEdge(6, 2)
-graph.addEdge(7, 3)
+const targetNode = 5;
 
-graph.print()
+function isTarget(currentNode: no){
 
-let notVisited: Set<number> = graph.getNodes()
-let q: Queue<number> = new Queue<number>();
-let neighNum = 1;
+    return (currentNode.nografo == targetNode)
 
-for (const node of notVisited) {
+}
 
-    q.push(node)
-    // console.log('Enqueue', node, 'Queue:', q);
-    notVisited.delete(node)
-    console.log(node)
-    // console.log(`Mark ${node} as visited. Visited ->`, visited, 'Not visited ->', notVisited)
-    // console.log(`While queue isn't empty... len(q) -> `, q.length)
-    while (q.length > 0) {
-        console.log(`L${neighNum++}`)
-        let u = q.pop();
-        // console.log(`u = ${u} = q.pop(); q->`, q)
+function getneighbors(currentNode: no){
+    // @ts-ignore
+    let vizinhos = grafo[currentNode.nografo];
 
-        // console.log(`Adj[${u}] = `, graph.getAdjacents(u));
-        for (const v of graph.getAdjacents(u)!) {
-            if (notVisited.has(v)) {
-                notVisited.delete(v)
-                console.log(v)
-                q.push(v)
+    let nos:no[] = [];
+    
+    vizinhos.forEach((v:any )=> {
+        nos.push({nografo:v, path:[v]})
+    });
+    
+    return nos;
+}
+
+type no = {nografo: number, path: any[]}
+
+function bfs(s: no, isTarget: any, getneighbors: any){
+
+    if(isTarget(s)){
+        return [s];
+    }
+
+    let frontier = [s];
+    // const x = frontier.shift();
+    let explored = new Set();
+
+    s.path = [s];
+
+    let t = null;
+
+    while(frontier.length > 0){
+
+        let u = frontier.shift();
+        explored.add(u);
+
+        const vizinhos = getneighbors(u);
+
+        for(var v of vizinhos){
+            v.path = [...s.path,...u!.path,...v.path]
+            console.log("s.path=", s.path, "u.path=", u!.path), "v.path=", v.path;
+            const isExplored = explored.has(v);
+            const isInFrontier = frontier.indexOf(v) != -1;
+
+           
+            if(!isExplored && !isInFrontier){
+                console.log("isTarget=", isTarget(v), "v=", v);
+                if(isTarget(v)){
+                    t = v;
+                    break;
+                }
+                frontier.push(v);
+                console.log(frontier);
             }
+
         }
+
+        if(isTarget(v)){
+            break;
+        }
+
+    }
+
+    if(t == null){
+        return [];
+    }else{
+        return t.path;
     }
 
 }
 
 
+const test = bfs({nografo: 4, path:[]}, isTarget, getneighbors);
+
+console.log(test);
