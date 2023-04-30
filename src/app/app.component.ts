@@ -22,8 +22,8 @@ export class AppComponent {
 
     public formBusca: FormGroup = this.formBuilder.group(
         {
-            usuarioA: ['nszchagas', Validators.required],
-            usuarioB: ['rodrigosiqueira', Validators.required],
+            usuarioA: [null, Validators.required],
+            usuarioB: [null, Validators.required],
             maxLevels: [4],
             token: [null]
         }
