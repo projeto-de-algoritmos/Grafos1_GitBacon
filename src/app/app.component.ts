@@ -1,8 +1,6 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {GitUser} from "./model/git_user";
 import {ApiService} from "./service/api.service";
-import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-root',
@@ -10,37 +8,49 @@ import {Observable} from "rxjs";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    public usuarioA?: Observable<GitUser>;
-    public usuarioB?: Observable<GitUser>;
-
-    public usuarioAFollowing: GitUser[] = [];
+    public usuarioA!: string;
+    public usuarioB!: string;
 
     public lblUserA = 'usuarioA'
     public lblUserB = 'usuarioB'
 
+    public search = false;
+    public showSettings = false;
+    public showInfo = false;
+    public userOrigin: string = '';
+    public userTarget: string = '';
+
     public formBusca: FormGroup = this.formBuilder.group(
         {
-            usuarioA: [null, Validators.required],
-            usuarioB: [null, Validators.required]
+            usuarioA: ['nszchagas', Validators.required],
+            usuarioB: ['rodrigosiqueira', Validators.required],
+            maxLevels: [4],
+            token: [null]
         }
     );
 
     constructor(private formBuilder: FormBuilder,
-                private service: ApiService) {
+                private apiService: ApiService
+    ) {
     }
 
     public searchUser(formControlName: string) {
         const inputValue = this.formBusca.get(formControlName)?.value
         if (inputValue) {
             if (formControlName == this.lblUserA) {
-                this.usuarioA = this.service.getGithubUser(inputValue);
-                this.getFollowing(this.lblUserA)
+                this.apiService.getGithubUser(inputValue).subscribe(
+                    user => this.usuarioA = user.login
+                );
             } else {
-                this.usuarioB = this.service.getGithubUser(inputValue);
-                this.getFollowing(this.lblUserB)
+                this.apiService.getGithubUser(inputValue).subscribe(
+                    user => this.usuarioB = user.login
+                );
+
+
             }
         }
     }
+
 
     public swap() {
         let temp = this.formBusca.get(this.lblUserA)?.value
@@ -50,11 +60,13 @@ export class AppComponent {
         this.searchUser(this.lblUserB)
     }
 
-    public getFollowing(formControlName: string) {
-        if (formControlName == this.lblUserA)
-            this.service.getFollowing(this.formBusca.get(this.lblUserA)?.value).subscribe(
-                value => this.usuarioAFollowing = value
-            )
+
+    public async runBFS() {
+        if (this.formBusca.get(this.lblUserA)?.value != null && this.formBusca.get(this.lblUserB)?.value != null) {
+            this.search = true;
+            this.userOrigin = this.formBusca.get(this.lblUserA)!.value!;
+            this.userTarget = this.formBusca.get(this.lblUserB)!.value!;
+        }
 
     }
 }

@@ -24,20 +24,11 @@ export class ApiService {
             {headers: this.httpOptions})
     }
 
-    public getFollowers(username: string): Observable<GitUser[]> {
-        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/followers`,
+
+    public getFollowing(username: string): Observable<GitUser[]> {
+        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/following`,
             {headers: this.httpOptions});
     }
 
-    public getFollowing(username: string, per_page: number = 1000, page: number = 0): Observable<GitUser[]> {
-        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/following?per_page=${per_page}`,
-            {headers: this.httpOptions});
-    }
-
-    // Status code = 204 -> Following, 404 -> Not following;
-    public isFollowing(username: string, target_user: string): Observable<any> {
-        return this.http.get(`${this.BASE_URL}/user/${username}/following/${target_user}`,
-            {headers: this.httpOptions});
-    }
 
 }
