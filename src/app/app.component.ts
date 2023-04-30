@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "./service/api.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-root',
@@ -8,17 +10,20 @@ import {ApiService} from "./service/api.service";
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+    public githubTokenInfo = 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token';
+
     public usuarioA!: string;
     public usuarioB!: string;
+
+    public usersValid: boolean = false;
+
+    private validyStatus: { userA?: boolean, userB?: boolean } = {}
 
     public lblUserA = 'usuarioA'
     public lblUserB = 'usuarioB'
 
-    public search = false;
     public showSettings = false;
     public showInfo = false;
-    public userOrigin: string = '';
-    public userTarget: string = '';
 
     public formBusca: FormGroup = this.formBuilder.group(
         {
@@ -30,44 +35,69 @@ export class AppComponent {
     );
 
     constructor(private formBuilder: FormBuilder,
-                private apiService: ApiService
+                private apiService: ApiService,
+                private snackBar: MatSnackBar
     ) {
     }
 
-    public searchUser(formControlName: string) {
+
+    private handleError(e: HttpErrorResponse, inputValue: string) {
+        if (e.status == 404)
+            this.notify(`Usuário ${inputValue} não encontrado no GitHub.`, true)
+        else
+            this.notify(`Erro au buscar usuário ${inputValue}. Descrição: ${e.message}`, true)
+    }
+
+    public onInputFocusOut(formControlName: string) {
         const inputValue = this.formBusca.get(formControlName)?.value
         if (inputValue) {
             if (formControlName == this.lblUserA) {
                 this.apiService.getGithubUser(inputValue).subscribe(
-                    user => this.usuarioA = user.login
+                    user => {
+                        this.usuarioA = user.avatar_url;
+                        this.validyStatus['userA'] = true;
+                        this.usersValid = (!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
+                    },
+                    error => this.handleError(error as HttpErrorResponse, inputValue)
                 );
             } else {
                 this.apiService.getGithubUser(inputValue).subscribe(
-                    user => this.usuarioB = user.login
+                    user => {
+                        this.usuarioB = user.avatar_url;
+                        this.validyStatus['userB'] = true;
+                        this.usersValid = (!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
+                    },
+                    error => this.handleError(error as HttpErrorResponse, inputValue)
                 );
-
-
             }
         }
     }
 
+    get token() {
+        return this.formBusca.get('token')?.value ? this.formBusca.get('token')!.value! : null;
+    }
+
+    get userOrigin() {
+        return this.formBusca.get(this.lblUserA)!.value!
+    }
+
+    get userTarget() {
+        return this.formBusca.get(this.lblUserB)!.value!
+    }
 
     public swap() {
         let temp = this.formBusca.get(this.lblUserA)?.value
         this.formBusca.get(this.lblUserA)?.setValue(this.formBusca.get(this.lblUserB)?.value)
         this.formBusca.get(this.lblUserB)?.setValue(temp)
-        this.searchUser(this.lblUserA)
-        this.searchUser(this.lblUserB)
+        this.onInputFocusOut(this.lblUserA)
+        this.onInputFocusOut(this.lblUserB)
     }
 
 
-    public async runBFS() {
-        if (this.formBusca.get(this.lblUserA)?.value != null && this.formBusca.get(this.lblUserB)?.value != null) {
-            this.search = true;
-            this.userOrigin = this.formBusca.get(this.lblUserA)!.value!;
-            this.userTarget = this.formBusca.get(this.lblUserB)!.value!;
-        }
-
+    public notify(msg: string, isError = false) {
+        const emoji = isError ? '⚠️' : '✅';
+        const message = `${emoji} ${msg}`
+        this.snackBar.open(message, 'Fechar', {duration: 2000});
     }
 }
 

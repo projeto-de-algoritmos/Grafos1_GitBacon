@@ -1,11 +1,13 @@
 .terminal {
   background-color: black;
-  font-family: monospace;
   color: greenyellow;
+  font-family: monospace;
   max-height: 500px;
-  }
+  box-shadow: 0 0 10px #868585;
+  border: #4b4949 solid thin;
+  border-radius: 3vh;
+}
 
-.tabbed {
-  padding-left: 5px;
-  tab-size: 4;
+mat-chip {
+  font-size: 3vh;
 }

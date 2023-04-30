@@ -39,93 +39,124 @@
 
 <mat-card class="d-flex">
     <mat-card-title>
-        <div class="col-12 text-center py-2">
+        <div class="col-12 text-center py-1">
             Busque a menor ligação entre dois usuários do GitHub
         </div>
     </mat-card-title>
-    <div class=>
-        <mat-card-content class="d-flex row py-2 ">
-            <div class="row col-12 justify-content-center">
+    <div>
+        <mat-card-content class="d-flex row col-12 m-0 p-0">
+            <div class="row col-12 m-0 p-0 pb-2">
                 <div class="col-1"></div>
                 <div class="col-4 d-flex justify-content-center">
-                    <app-avatar [user]="usuarioA"></app-avatar>
+                    <app-avatar [avatarSrc]="usuarioA"></app-avatar>
                 </div>
-                <div class="col-1 p-0 m-0 h-100 d-flex justify-content-center w-100">
-                    <mat-icon class="align-self-center text-size"> arrow_right_alt</mat-icon>
+                <div class="col-2 d-flex justify-content-center">
+                    <button mat-fab disabled class="align-self-center">
+                        <mat-icon class="text-size-lg "> arrow_right_alt</mat-icon>
+                    </button>
                 </div>
-                <div class="col-4 p-0 m-0 w-100 d-flex justify-content-center">
-                    <app-avatar [user]="usuarioB"></app-avatar>
+                <div class="col-4 d-flex justify-content-center">
+                    <app-avatar [avatarSrc]="usuarioB"></app-avatar>
                 </div>
                 <div class="col-1"></div>
             </div>
-            <form class="row col-12 justify-content-center"
+            <form class="col-12 m-0 p-0"
                   [formGroup]="formBusca"
                   *ngIf="formBusca">
-                <div class="col-1"></div>
-                <div class="col-4">
-                    <mat-form-field class="w-100" appearance="outline">
-                        <mat-label> Usuário do GitHub</mat-label>
-                        <input matInput formControlName="usuarioA"
-                               (focusout)="searchUser(lblUserA)"
-                               required
-                        >
-                    </mat-form-field>
-                </div>
-                <div class="col-1 d-flex justify-content-center align-content-start">
-                    <button mat-mini-fab color="primary" class="align-self-start" (click)="swap()">
-                        <mat-icon>swap_horiz</mat-icon>
-                    </button>
-                </div>
-                <div class="col-4">
-                    <mat-form-field class="w-100 v-100"
-                                    appearance="outline">
-                        <mat-label> Usuário do GitHub</mat-label>
-                        <input matInput formControlName="usuarioB"
-                               (focusout)="searchUser(lblUserB)"
-                               required>
-                    </mat-form-field>
-                </div>
-                <div class="col-1 ">
-                    <div class="d-flex justify-content-start">
-                        <button mat-mini-fab color="primary"
-                                class="align-self-center" (click)="runBFS()">
-                            <mat-icon>search</mat-icon>
+                <div class="row p-0 m-0">
+                    <div class="col-1"></div>
+                    <div class="col-4 d-flex justify-content-center">
+                        <mat-form-field appearance="outline"
+                                        class="w-100"
+                                        [hideRequiredMarker]="true">
+                            <mat-label> Usuário do GitHub</mat-label>
+                            <input matInput
+                                   required
+                                   [formControlName]="lblUserA"
+                                   (focusout)="onInputFocusOut(lblUserA)">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2 d-flex justify-content-center">
+                        <button mat-mini-fab color="primary" class="align-self-center" (click)="swap()">
+                            <mat-icon>swap_horiz</mat-icon>
                         </button>
                     </div>
-                </div>
-
-
-                <div class="row" *ngIf="showSettings">
-                    <div class="col-4">
-                        <mat-form-field appearance="outline" class="v-100 w-100">
-                            <mat-label> Nº Máximo de Camadas</mat-label>
-                            <input type="number" matInput formControlName="maxLevels"/>
+                    <div class="col-4 d-flex justify-content-center ">
+                        <mat-form-field appearance="outline"
+                                        class="w-100"
+                                        [hideRequiredMarker]="true">
+                            <mat-label> Usuário do GitHub</mat-label>
+                            <input #userB matInput
+                                   type="text"
+                                   [formControlName]="lblUserB"
+                                   (focusout)="onInputFocusOut(lblUserB)"
+                                   required>
+                            <button *ngIf="userB.value" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="userB.value=''">
+                                <mat-icon>clear</mat-icon>
+                            </button>
                         </mat-form-field>
                     </div>
                     <div class="col-1"></div>
-                    <div class="col-4">
-                        <mat-form-field appearance="outline" class="v-100 w-100">
-                            <mat-label> Token do GitHub</mat-label>
-                            <input matInput formControlName="token"/>
+                </div>
+                <div class="row p-0 m-0" *ngIf="showSettings">
+                    <div class="col-1"></div>
+                    <div class="col-2 d-flex justify-content-center ">
+                        <mat-form-field appearance="outline"
+                        >
+                            <mat-label> Algoritmo</mat-label>
+                            <mat-select disabled value="BFS">
+                                <mat-option [value]="'BFS'">BFS</mat-option>
+                            </mat-select>
+
                         </mat-form-field>
                     </div>
+                    <div class="col-2 d-flex justify-content-center">
+                        <mat-form-field appearance="outline"
+                                        class="w-100">
+                            <mat-label> Nº Máximo de Camadas</mat-label>
+                            <input type="number" matInput formControlName="maxLevels" [max]="6"/>
+                            <button matSuffix mat-icon-button aria-label="Help"
+                                    (click)="maxLevelHint.hidden=!maxLevelHint.hidden">
+                                <mat-icon>help</mat-icon>
+                            </button>
+                            <mat-hint #maxLevelHint hidden="hidden"> Valor máximo: 6</mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2"></div>
+                    <div class="col-4 d-flex justify-content-center">
+                        <mat-form-field appearance="outline"
+                                        class="w-100">
+                            <mat-label> Token do GitHub</mat-label>
+                            <input matInput formControlName="token"/>
+                            <button matSuffix mat-icon-button aria-label="Help"
+                                    (click)="tokenHint.hidden=!tokenHint.hidden">
+                                <mat-icon>help</mat-icon>
+                            </button>
+                            <mat-hint #tokenHint hidden="hidden">
+                                <a [href]="githubTokenInfo">
+                                    <mat-icon color="primary">info</mat-icon>
+                                </a>
+                                <span class="pl-1">GitHub's Personal Access Token</span>
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1"></div>
                 </div>
             </form>
-
-
             <mat-card-content *ngIf="showInfo">
                 <app-info-component class="d-flex align-content-center py-2"/>
             </mat-card-content>
         </mat-card-content>
     </div>
-    <div class="d-flex row col-12 py-2">
-        <mat-card-content *ngIf="search" class="py-5 w-100">
+    <div class="d-flex col-12 m-0 p-0">
+        <mat-card-content *ngIf="usersValid" class="m-0 p-0 w-100">
             <app-bfs-search
                     [userOrigin]="userOrigin"
                     [userTarget]="userTarget"
+                    [providedToken]="token"
             />
         </mat-card-content>
     </div>
 </mat-card>
-
 

@@ -1,5 +1,5 @@
 .text-size-lg {
-  transform: scale(3);
+  transform: scale(2);
 }
 
 .img-sm {
@@ -8,4 +8,8 @@
 
 .spacer {
   flex: 1 1 auto;
+}
+
+mat-card {
+  height: 100%;
 }
