@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {GitUser} from "../../model/git_user";
+import {ApiService} from "../../service/api.service";
 
 @Component({
     selector: 'app-avatar',
@@ -7,27 +7,29 @@ import {GitUser} from "../../model/git_user";
     styleUrls: ['./avatar.component.scss']
 })
 export class AvatarComponent implements OnChanges {
-    @Input() public user?: GitUser | null;
+    @Input() public user?: string;
     @Input() public isSmall: boolean = false;
+    @Input() public showArrow: boolean = false;
     public avatarSrc!: string;
     public loading = false;
     public showAvatar = false;
     public githubUser: string = '';
     public login: string = '';
 
-    constructor() {
+    constructor(private service: ApiService) {
     }
 
-
-
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['user']) {
-            this.user = changes['user'].currentValue;
-            if (this.user?.login) {
-                this.avatarSrc = this.user?.avatar_url ? this.user?.avatar_url : '';
-                this.githubUser = this.user?.login ? `https://github.com/${this.user?.login}` : ''
-                this.showAvatar = true;
-            }
+        if (this.user) {
+            this.loading = true;
+            this.service.getGithubUser(this.user).subscribe(
+                gitUser => {
+                    this.avatarSrc = gitUser.avatar_url;
+                    this.githubUser = `https://github.com/${gitUser.login}`;
+                    this.loading = false;
+                    this.showAvatar = true;
+                }
+            )
         }
     }
 
