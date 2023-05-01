@@ -1,4 +1,4 @@
-# NomedoProjeto
+# GitBacon
 
 **Número da Lista**: Dupla 06 (T01)<br>
 **Conteúdo da Disciplina**: Grafos 1<br>
@@ -25,30 +25,37 @@ Os dados utilizados no projeto são disponibilizados pela API do GitHub.
 <div style="text-align:center">Figura 1 - Tela Inicial.</div>
 
 
-![Figura 2 - Busca em andamento.](./assets/busca.png)
-<div style="text-align:center">Figura 2 - Busca em andamento.</div>
 
-![Figura 3 - Resultado.](./assets/resultado.png)
-<div style="text-align:center">Figura 3 - Resultado.</div>
+
+
+![Figura 2 - Busca em andamento.](./assets/busca1.png)
+<div style="text-align:center">Figura 2 - Exemplo de Busca.</div>
+
+
+
+![Figura 3 - Busca em andamento.](./assets/busca2.png)
+<div style="text-align:center">Figura 3 - Exemplo de Busca.</div>
+
+
+![](./assets/configuracoes-busca.png)
+<div style="text-align:center">Figura 4 - Configurações de Busca.</div>
+
+![](./assets/informacoes.png)
+<div style="text-align:center">Figura 5 - Aba de informações.</div>
 
 ## Instalação
 
-**Linguagem**: Typescript@<br>
+**Linguagem**: Typescript@4.9.4<br>
 **Framework**: Angular@15.2.0<br>
 
-Para rodar o projeto localmente é necessário ter Node (^20.0.0) instalado na máquina. Recomendamos a utilização do Node Version Manager (nvm) para instalação da versão correta do node. 
+Para rodar o projeto localmente é necessário ter Node (^20.0.0) e Angular (^15.2.0) instalado na máquina. Recomendamos a utilização do Node Version Manager (nvm) para instalação da versão correta do node. 
 
 ```shell
+
 nvm install 20.0.0
 nvm use 20.0.0
-```
-
-Para desenvolver no projeto:
-
-- É **recomendável** ter o Angular (^15.2.0) instalado globalmente.
-
-```shell
 npm install angular@15.2.0 -g
+
 ```
 
 - É **necessário** instalar as dependências do projeto, executando o seguinte comando na pasta raiz do projeto (a mesma onde se encontra o [package.json](./package.json).
@@ -57,10 +64,7 @@ npm install angular@15.2.0 -g
 npm install 
 ```
 
-Para rodar o projeto localmente: 
-
-- É necessário instalar as dependências do projeto (confira o tópico anterior);
-- Executar o seguinte comando na raiz do projeto: 
+- Para rodar o projeto, basta executar o comando abaixo na raiz do projeto.
 
 ```shell
 npm run start 

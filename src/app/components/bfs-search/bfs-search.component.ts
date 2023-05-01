@@ -16,7 +16,7 @@ export class BfsSearchComponent implements OnChanges {
     @Input() public userOrigin!: string;
     @Input() public userTarget!: string;
     @Input() maxLevel: number = 6;
-    @Input() maxVisitedUsers: number = 2000;
+    @Input() maxFollowersToVisitPerUser: number = 10;
     @Input() providedToken: string = '';
     public showResults: boolean = false;
     public path?: string[];
@@ -79,8 +79,6 @@ export class BfsSearchComponent implements OnChanges {
 
     async bfs(): Promise<string[]> {
         try {
-
-
             // Variables used in messages formatting
             let qtdVisitedUsers: number = 0;
             let visitedUsers: string[] = [];
@@ -115,9 +113,6 @@ export class BfsSearchComponent implements OnChanges {
             }
 
             // Algorithm
-
-
-
             if (isTarget(originUser)) {
                 this.msg(`Found path between 
                                     ${this.userOrigin} and ${this.userTarget}<br/>
@@ -125,15 +120,27 @@ export class BfsSearchComponent implements OnChanges {
                 this.msg('Rendering results...')
                 return [originUser.login];
             }
-            while (queue.length > 0 && level <= this.maxLevel && qtdVisitedUsers <= this.maxVisitedUsers && !this.stop) {
+
+            while (queue.length > 0 && level <= this.maxLevel && !this.stop) {
                 let currentUser = queue.shift()!;
                 visit(currentUser);
                 if (this.stop) {
                     this.messages.push('Stopped search!')
                     return [];
                 }
-                const neighbors = await this.service.getFollowing(currentUser.login, this.providedToken).toPromise()
-                    .catch(error => this.handleError(error, currentUser.login));
+                let neighbors = [];
+                let page = 1;
+                let response;
+                while (page <= this.maxFollowersToVisitPerUser) {
+                    response = await this.service.getFollowing(currentUser.login, page++, this.providedToken).toPromise()
+                        .catch(error => this.handleError(error, currentUser.login));
+                    console.log(response);
+                    neighbors.push(...response!)
+                    if (response!.length < 100) break;
+                    if (response!.length == 0) break;
+                    
+                }
+
                 for (currentNeighbor of neighbors!.map((viz: GitUser) => ({
                     login: viz.login, path: [viz.login]
                 }))!) {
@@ -169,6 +176,7 @@ export class BfsSearchComponent implements OnChanges {
                                     ${targetUser.path.join(' ➜ ')}`)
                 this.msg('Rendering results...')
                 this.kevinBaconNumber = level;
+                this.showResults = true;
                 return targetUser.path;
             }
         } catch (e) {

@@ -13,6 +13,7 @@ export class AvatarComponent implements OnChanges {
     @Input() public isSmall: boolean = false;
     @Input() public showArrow: boolean = false;
     @Input() public avatarSrc?: string | undefined;
+    @Input() public providedToken!: string;
     public loading = false;
     public showAvatar = false;
     public githubUser: string = '';
@@ -36,7 +37,7 @@ export class AvatarComponent implements OnChanges {
             this.loading = false;
         } else if (changes['user'] && changes['user'].currentValue != null) {
             const user = changes['user'].currentValue;
-            this.service.getGithubUser(user).subscribe(
+            this.service.getGithubUser(user, this.providedToken).subscribe(
                 gitUser => {
                     this.avatarSrc = gitUser.avatar_url;
                     this.githubUser = `https://github.com/${gitUser.login}`;
@@ -48,7 +49,7 @@ export class AvatarComponent implements OnChanges {
                     if (e.status == 404)
                         this.notify(`Usuário ${user} não encontrado no GitHub.`, true)
                     else
-                        this.notify(`Erro au buscar usuário ${user}. Descrição: ${e.message}`, true)
+                        this.notify(`Erro ao buscar usuário ${user}. Descrição: ${e.message}`, true)
                 }
             )
         } else {
