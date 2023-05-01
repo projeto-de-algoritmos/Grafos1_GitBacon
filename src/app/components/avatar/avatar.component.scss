@@ -1,10 +1,14 @@
-img {
-  max-width: 25vw;
-  max-height: 25vh;
-  border-radius: 100px;
+.small {
+  max-width: 10vw;
+  max-height: 10vh;
 }
 
-.small {
-  max-width:  10vw;
-  max-height: 10vh;
+.normal {
+  max-width: 20vw;
+  max-height: 20vh;
+}
+
+img {
+  box-shadow: 0 0 10px #868585;
+  border: #4b4949 solid thin;
 }

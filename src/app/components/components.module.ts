@@ -9,6 +9,8 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatCardModule} from "@angular/material/card";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {BfsSearchComponent} from "./bfs-search/bfs-search.component";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import {BfsSearchComponent} from "./bfs-search/bfs-search.component";
         MatSnackBarModule,
         MatCardModule,
         MatProgressSpinnerModule,
+        MatChipsModule,
+        MatButtonModule,
 
     ]
 })

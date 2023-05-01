@@ -14,6 +14,7 @@ import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {NgOptimizedImage} from "@angular/common";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
         HttpClientModule,
         NgOptimizedImage,
         MatToolbarModule,
-        MatSidenavModule
+        MatSidenavModule,
+        MatSelectModule
 
     ],
     providers: [HttpClient],

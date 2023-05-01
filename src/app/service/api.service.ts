@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {GitUser} from "../model/git_user";
 import {Observable} from "rxjs";
@@ -9,11 +9,12 @@ import {Observable} from "rxjs";
 export class ApiService {
 
     // Insira aqui seu token de acesso pessoal ao github.
-    private TOKEN: string = ''
+    @Inject('token') private TOKEN: string = ''
     private BASE_URL: string = 'https://api.github.com/users';
     private httpOptions: HttpHeaders = new HttpHeaders({
         'Authorization': this.TOKEN ? `Bearer ${this.TOKEN}` : ''
     })
+
 
     constructor(private http: HttpClient) {
     }

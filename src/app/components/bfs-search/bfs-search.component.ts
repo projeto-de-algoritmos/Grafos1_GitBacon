@@ -8,18 +8,24 @@ type no = { login: string, path: any[] }
 @Component({
     selector: 'app-bfs-search',
     templateUrl: './bfs-search.component.html',
-    styleUrls: ['./bfs-search.component.scss']
+    styleUrls: ['./bfs-search.component.scss'],
+    providers: [{provide: 'token', useValue: 'providedToken' }]
 })
 export class BfsSearchComponent implements OnChanges {
     @Input() public userOrigin!: string;
     @Input() public userTarget!: string;
     @Input() maxLevel: number = 6;
+    @Input() maxVisitedUsers: number = 2000;
+    @Input() providedToken: string = '';
     public path?: string [];
     public messages: string[] = [];
 
     public kevinBaconNumber?: number = undefined;
 
+
     constructor(private service: ApiService) {
+
+
     }
 
     public getLastMessages(qtd?: number): string[] {
@@ -46,8 +52,8 @@ export class BfsSearchComponent implements OnChanges {
     }
 
     start() {
+
         this.bfs().then(path => {
-            console.log(path);
             this.path = path;
         });
 
@@ -55,6 +61,15 @@ export class BfsSearchComponent implements OnChanges {
 
 
     async bfs(): Promise<string[]> {
+
+        // Variables used in messages formatting
+        let qtdVisitedUsers: number = 0;
+        let visitedUsers: string = '';
+
+        // Time control
+
+        let start = Date.now();
+
 
         // Variables
         const originUsername = this.userOrigin;
@@ -65,15 +80,21 @@ export class BfsSearchComponent implements OnChanges {
         let t = null;
         let currentNeighbor = undefined;
 
+
         // Functions
         const isTarget = (currentNode?: no) => {
             return currentNode ? currentNode.login == this.userTarget : false
         }
         const visit = (user?: no) => {
             if (!visited.has(user))
-                this.msg(`Visiting user: ${user?.login} | Current level: L${level < 0 ? 0 : level } <br/>
-                            Visited GitHub ${visited.size} user(s) until now: 
-                            [${this.formatArray(Array.from(visited).map((el: any) => el.login)).join(', ')}]`);
+                if (qtdVisitedUsers == 0)
+                    visitedUsers = visitedUsers + user!.login
+                else
+                    visitedUsers = visitedUsers + ', ' + user!.login
+            qtdVisitedUsers++;
+            this.msg(`Visiting user: ${user?.login} | Current level: L${level < 0 ? 0 : level} <br/>
+                            Visited GitHub ${qtdVisitedUsers} user(s) until now: 
+                            [${visitedUsers}]`);
             visited.add(user);
         }
 
@@ -86,19 +107,16 @@ export class BfsSearchComponent implements OnChanges {
             this.msg('Rendering results...')
             return [originUser.login];
         }
-        while (queue.length > 0 && level <= this.maxLevel) {
+        while (queue.length > 0 && level <= this.maxLevel && qtdVisitedUsers <= this.maxVisitedUsers) {
             let currentUser = queue.shift()!;
             visit(currentUser);
             const neighbors = await this.service.getFollowing(currentUser.login).toPromise()
-            let neighborNodes = neighbors!.map((viz: GitUser) => ({
+            for (currentNeighbor of neighbors!.map((viz: GitUser) => ({
                 login: viz.login, path: [viz.login]
-            }))!
-            for (currentNeighbor of neighborNodes) {
+            }))!) {
                 currentNeighbor.path = [...currentUser!.path, ...currentNeighbor.path]
                 level = currentNeighbor.path.length - 1
-                const isExplored = visited.has(currentNeighbor);
-                const isInFrontier = queue.indexOf(currentNeighbor) != -1;
-                if (!isExplored && !isInFrontier) {
+                if (!visited.has(currentNeighbor) && !(queue.indexOf(currentNeighbor) != -1)) {
                     if (isTarget(currentNeighbor)) {
                         t = currentNeighbor;
                         break;
