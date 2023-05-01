@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ApiService } from "./service/api.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { BfsSearchComponent } from './components/bfs-search/bfs-search.component';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+    @ViewChild(BfsSearchComponent) bfsSearchComponent!: BfsSearchComponent;
+
+
     public githubTokenInfo = 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token';
 
-    public usuarioA!: string;
-    public usuarioB!: string;
+    public usuarioA?: string;
+    public usuarioB?: string;
 
-    public usersValid: boolean = false;
+    public usersValid: Subject<boolean> = new Subject<boolean>();
 
     private validyStatus: { userA?: boolean, userB?: boolean } = {}
 
@@ -24,13 +29,14 @@ export class AppComponent {
 
     public showSettings = false;
     public showInfo = false;
+    public showSearch = false;
 
     public formBusca: FormGroup = this.formBuilder.group(
         {
-            usuarioA: [null, Validators.required],
-            usuarioB: [null, Validators.required],
-            maxLevels: [4],
-            token: [null]
+            usuarioA: ['lucasgabriel-2'],
+            usuarioB: ['fserb'],
+            maxLevel: [4],
+            token: ['']
         }
     );
 
@@ -38,6 +44,17 @@ export class AppComponent {
         private apiService: ApiService,
         private snackBar: MatSnackBar
     ) {
+        this.usersValid.next(false);
+    }
+
+
+    ngOnInit(): void {
+        this.usersValid.subscribe(
+            next => {
+                if (next == true)
+                    this.showSearch = true;
+            }
+        )
     }
 
     get providedToken() {
@@ -50,7 +67,7 @@ export class AppComponent {
         else if (e.status == 403)
             this.notify('Limite de acessos à API Rest atingido. Aguarde uma hora para tentar novamente ou forneça um token, clicando no ícone ⚙️.', true)
         else
-            this.notify(`Erro au buscar usuário ${inputValue}. Descrição: ${e.message}`, true)
+            this.notify(`Erro ao buscar usuário ${inputValue}. Descrição: ${e.message}`, true)
     }
 
     public onInputFocusOut(formControlName: string) {
@@ -61,7 +78,7 @@ export class AppComponent {
                     user => {
                         this.usuarioA = user.avatar_url;
                         this.validyStatus['userA'] = true;
-                        this.usersValid = (!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
+                        this.usersValid.next(!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
                     },
                     error => this.handleError(error as HttpErrorResponse, inputValue)
                 );
@@ -70,13 +87,35 @@ export class AppComponent {
                     user => {
                         this.usuarioB = user.avatar_url;
                         this.validyStatus['userB'] = true;
-                        this.usersValid = (!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
+                        this.usersValid.next(!!this.validyStatus['userA'] && !!this.validyStatus['userB']);
                     },
                     error => this.handleError(error as HttpErrorResponse, inputValue)
                 );
             }
         }
     }
+
+    public stop() {
+        this.notify('Encerrando a busca, aguarde.', true)
+        this.bfsSearchComponent.stop = true;
+        this.bfsSearchComponent.messages.push('Stopping search...')
+    }
+
+    public reset() {
+        this.stop();
+
+        this.formBusca.get(this.lblUserA)?.setValue('');
+        this.formBusca.get(this.lblUserB)?.setValue('');
+        this.formBusca.get('maxLevel')?.setValue(4);
+
+        this.usuarioA = undefined;
+        this.usuarioB = undefined;
+        this.showSearch = false;
+
+        this.validyStatus = {};
+        this.usersValid.next(false);
+    }
+
 
     get token() {
         return this.formBusca.get('token')?.value ? this.formBusca.get('token')!.value! : null;
@@ -88,6 +127,10 @@ export class AppComponent {
 
     get userTarget() {
         return this.formBusca.get(this.lblUserB)!.value!
+    }
+
+    get maxLevel() {
+        return this.formBusca.get('maxLevel')!.value!
     }
 
     public swap() {
