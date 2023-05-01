@@ -1,30 +1,27 @@
 <div class="d-flex row col-12 m-0 p-0">
     <div class="col-1"></div>
     <div class="terminal col-10 m-2 p-2">
-        <div *ngFor="let message of getLastMessages(5)" [innerHTML]="message">
+        <div *ngFor="let message of getLastMessages(2)" [innerHTML]="message">
         </div>
     </div>
     <div class="col-1"></div>
 </div>
 
-<div *ngIf="path" class="d-flex row col-12 m-0 p-0">
-    <div class="row d-flex justify-content-center col-12 p-2">
+<div *ngIf="showResults && path" class="d-flex row col-12 m-0 p-0">
+    <div class="row d-flex justify-content-center col-12 p-0 m-0 py-2">
         <mat-chip color="primary">
-            O número de Kevin Bacon entre {{userOrigin}} e {{userTarget}} é {{kevinBaconNumber}}.
+            O número de Kevin Bacon entre {{userOrigin}} e {{userTarget}}, em {{maxLevel}} níveis de separação é
+            {{kevinBaconNumber ? kevinBaconNumber :
+            '∞'}}.
         </mat-chip>
     </div>
-    <div class="d-flex row col-12 m-0 p-0 justify-content-center">
-        <div class="col-10">
-            <div *ngFor="let user of path.slice(0, path.length - 1)">
-                <app-avatar [user]="user" [isSmall]="true" [showArrow]="true"/>
-            </div>
-            <div class="d-flex justify-content-center col-12">
-                <app-avatar [user]="path[path.length-1]" [isSmall]="true"/>
-            </div>
+    <div class="d-flex row col-12 m-0 p-0 pb-2 justify-content-center" *ngIf="kevinBaconNumber">
+        <div *ngFor="let user of path.slice(0, path.length - 1)" class="pr-2">
+            <app-avatar [user]="user" [isSmall]="true" [showArrow]="true" />
+        </div>
+        <div class="d-flex justify-content-center">
+            <app-avatar [user]="path[path.length-1]" [isSmall]="true" />
         </div>
     </div>
 
-
 </div>
-
-

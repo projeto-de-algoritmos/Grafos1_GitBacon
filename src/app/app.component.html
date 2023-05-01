@@ -59,21 +59,36 @@
                         <div class="col-4 d-flex justify-content-center">
                             <mat-form-field appearance="outline" class="w-100" [hideRequiredMarker]="true">
                                 <mat-label> Usuário do GitHub</mat-label>
-                                <input matInput required [formControlName]="lblUserA" autocomplete="username"
-                                    (focusout)="onInputFocusOut(lblUserA)">
+                                <input #userA matInput [formControlName]="lblUserA" autocomplete="username"
+                                    (focusout)="onInputFocusOut(lblUserA)" [readonly]="showSearch">
+                                <button *ngIf="userA.value && !showSearch" matSuffix mat-icon-button aria-label="Clear"
+                                    (click)="userA.value=''">
+                                    <mat-icon>clear</mat-icon>
+                                </button>
                             </mat-form-field>
                         </div>
                         <div class="col-2 d-flex justify-content-center align-content-start pt-2">
-                            <button mat-mini-fab color="primary" (click)="swap()">
-                                <mat-icon>swap_horiz</mat-icon>
+                            <div *ngIf="!showSearch">
+                                <button mat-mini-fab color="primary" (click)="swap()">
+                                    <mat-icon>swap_horiz</mat-icon>
+                                </button>
+                            </div>
+                            <div *ngIf="showSearch">
+                                <button mat-mini-fab color="warn" (click)="stop()">
+                                    <mat-icon>stop</mat-icon>
+                                </button>
+                            </div>
+                            <button mat-mini-fab color="primary" class="ml-2" (click)="reset()">
+                                <mat-icon>refresh</mat-icon>
                             </button>
                         </div>
                         <div class="col-4 d-flex justify-content-center ">
                             <mat-form-field appearance="outline" class="w-100" [hideRequiredMarker]="true">
                                 <mat-label> Usuário do GitHub</mat-label>
                                 <input #userB matInput type="text" [formControlName]="lblUserB"
-                                    (focusout)="onInputFocusOut(lblUserB)" required autocomplete="username">
-                                <button *ngIf="userB.value" matSuffix mat-icon-button aria-label="Clear"
+                                    (focusout)="onInputFocusOut(lblUserB)" autocomplete="username"
+                                    [readonly]="showSearch">
+                                <button *ngIf="userB.value && !showSearch" matSuffix mat-icon-button aria-label="Clear"
                                     (click)="userB.value=''">
                                     <mat-icon>clear</mat-icon>
                                 </button>
@@ -95,12 +110,12 @@
                         <div class="col-2 d-flex justify-content-center">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label> Nº Máximo de Camadas</mat-label>
-                                <input type="number" matInput formControlName="maxLevels" [max]="6" />
+                                <input type="number" matInput formControlName="maxLevel" [max]="6" />
                                 <button matSuffix mat-icon-button aria-label="Help"
                                     (click)="maxLevelHint.hidden=!maxLevelHint.hidden">
                                     <mat-icon>help</mat-icon>
                                 </button>
-                                <mat-hint #maxLevelHint hidden="hidden"> Valor máximo: 6</mat-hint>
+                                <mat-hint #maxLevelHint hidden="hidden"> Máx. 6</mat-hint>
                             </mat-form-field>
                         </div>
                         <div class="col-2"></div>
@@ -127,8 +142,8 @@
             </mat-card-content>
         </div>
         <div class="d-flex col-12 m-0 p-0">
-            <mat-card-content *ngIf="usersValid" class="m-0 p-0 w-100">
-                <app-bfs-search [userOrigin]="userOrigin" [userTarget]="userTarget" [providedToken]="token" />
+            <mat-card-content *ngIf="showSearch" class="m-0 p-0 w-100">
+                <app-bfs-search [userOrigin]="userOrigin" [userTarget]="userTarget" [providedToken]="token" [maxLevel]="maxLevel" />
             </mat-card-content>
         </div>
     </mat-card>
