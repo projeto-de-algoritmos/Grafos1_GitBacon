@@ -82,7 +82,7 @@ As consultas à API do GitHub possuem um limite para usuários não autenticados
 
 ## Referências
 
-[1] Hotpot.ai - Ferramenta para geração de imagens com uso de inteligência artificial. Disponível no [link](https://hotpot.ai/), acesso em 29/04/2023.
-[2] Breadth First Search or BFS for a Graph - GeeksForGeeks. Disponível no [link](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/), acesso em 29/04/2023.
-[3] Tracing the Path in DFS, BFS, and Dijkstra’s Algorithm - Baeldung. Disponível no [link](https://www.baeldung.com/cs/dfs-vs-bfs-vs-dijkstra), acesso em 20/04/2023.
+[1] Hotpot.ai - Ferramenta para geração de imagens com uso de inteligência artificial. Disponível no [link](https://hotpot.ai/), acesso em 29/04/2023. <br/>
+[2] Breadth First Search or BFS for a Graph - GeeksForGeeks. Disponível no [link](https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/), acesso em 29/04/2023. <br/>
+[3] Tracing the Path in DFS, BFS, and Dijkstra’s Algorithm - Baeldung. Disponível no [link](https://www.baeldung.com/cs/dfs-vs-bfs-vs-dijkstra), acesso em 20/04/2023.<br/>
 
