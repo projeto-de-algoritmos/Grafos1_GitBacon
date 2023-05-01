@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
 
     public formBusca: FormGroup = this.formBuilder.group(
         {
-            usuarioA: ['lucasgabriel-2'],
-            usuarioB: ['fserb'],
+            usuarioA: [null],
+            usuarioB: [null],
             maxLevel: [4],
             token: ['']
         }
