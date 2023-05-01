@@ -15,7 +15,7 @@ export class ApiService {
     }
 
 
-    public getGithubUser(username: string, token?: string): Observable<GitUser> {
+    public getGithubUser(username: string, token: string): Observable<GitUser> {
         return this.http.get<GitUser>(`${this.BASE_URL}/${username}`,
             {
                 headers: new HttpHeaders({
@@ -25,8 +25,9 @@ export class ApiService {
     }
 
 
-    public getFollowing(username: string, token?: string): Observable<GitUser[]> {
-        return this.http.get<GitUser[]>(`${this.BASE_URL}/${username}/following`,
+    public getFollowing(username: string, page: number, token: string): Observable<GitUser[]> {
+        const url = `${this.BASE_URL}/${username}/following?per_page=100&page=${page}`
+        return this.http.get<GitUser[]>(url,
             {
                 headers: new HttpHeaders({
                     'Authorization': token ? `Bearer ${token}` : ''
