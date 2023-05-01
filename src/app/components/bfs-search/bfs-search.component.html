@@ -10,17 +10,17 @@
 <div *ngIf="showResults && path" class="d-flex row col-12 m-0 p-0">
     <div class="row d-flex justify-content-center col-12 p-0 m-0 py-2">
         <mat-chip color="primary">
-            O número de Kevin Bacon entre {{userOrigin}} e {{userTarget}}, em {{maxLevel}} níveis de separação é
+            O número de Kevin Bacon entre {{userOrigin}} e {{userTarget}} é
             {{kevinBaconNumber ? kevinBaconNumber :
-            '∞'}}.
+            '∞'}} (em {{maxLevel}} níveis de separação).
         </mat-chip>
     </div>
     <div class="d-flex row col-12 m-0 p-0 pb-2 justify-content-center" *ngIf="kevinBaconNumber">
         <div *ngFor="let user of path.slice(0, path.length - 1)" class="pr-2">
-            <app-avatar [user]="user" [isSmall]="true" [showArrow]="true" />
+            <app-avatar [user]="user" [isSmall]="true" [showArrow]="true" [providedToken]="providedToken" />
         </div>
         <div class="d-flex justify-content-center">
-            <app-avatar [user]="path[path.length-1]" [isSmall]="true" />
+            <app-avatar [user]="path[path.length-1]" [isSmall]="true" [providedToken]="providedToken" />
         </div>
     </div>
 
