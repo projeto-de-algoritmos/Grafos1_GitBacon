@@ -1,7 +1,7 @@
 <mat-drawer-container autosize class="h-100">
     <mat-toolbar>
         <mat-toolbar-row class="d-flex row">
-            <div class="ml-3" (click)="drawer.toggle()" style="cursor: pointer;"> 
+            <div class="ml-3" (click)="drawer.toggle()" style="cursor: pointer;">
                 <img src="./assets/icon_sm.png" class="rounded-circle" alt="Logo do site">
             </div>
             <div class="ml-3">
@@ -59,12 +59,12 @@
                         <div class="col-4 d-flex justify-content-center">
                             <mat-form-field appearance="outline" class="w-100" [hideRequiredMarker]="true">
                                 <mat-label> Usuário do GitHub</mat-label>
-                                <input matInput required [formControlName]="lblUserA"
+                                <input matInput required [formControlName]="lblUserA" autocomplete="username"
                                     (focusout)="onInputFocusOut(lblUserA)">
                             </mat-form-field>
                         </div>
-                        <div class="col-2 d-flex justify-content-center">
-                            <button mat-mini-fab color="primary" class="align-self-center" (click)="swap()">
+                        <div class="col-2 d-flex justify-content-center align-content-start pt-2">
+                            <button mat-mini-fab color="primary" (click)="swap()">
                                 <mat-icon>swap_horiz</mat-icon>
                             </button>
                         </div>
@@ -72,7 +72,7 @@
                             <mat-form-field appearance="outline" class="w-100" [hideRequiredMarker]="true">
                                 <mat-label> Usuário do GitHub</mat-label>
                                 <input #userB matInput type="text" [formControlName]="lblUserB"
-                                    (focusout)="onInputFocusOut(lblUserB)" required>
+                                    (focusout)="onInputFocusOut(lblUserB)" required autocomplete="username">
                                 <button *ngIf="userB.value" matSuffix mat-icon-button aria-label="Clear"
                                     (click)="userB.value=''">
                                     <mat-icon>clear</mat-icon>
