@@ -17,7 +17,6 @@ export class ApiService {
 
 
     constructor(private http: HttpClient) {
-        console.log(this.TOKEN);
     }
 
 
