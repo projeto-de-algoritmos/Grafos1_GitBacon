@@ -7,7 +7,7 @@
 
 | Matrícula  | Aluno                                                                   |
 |------------|-------------------------------------------------------------------------|
-| 19/011212  | [Lucas Gabriel Sousa Carmargo Paiva](https://github.com/lucasgabriel-2) |
+| 19/0112123 | [Lucas Gabriel Sousa Carmargo Paiva](https://github.com/lucasgabriel-2) |
 | 20/0042327 | [Nicolas Chagas Souza](https://github.com/nszchagas)                    |
 
 ## Sobre
