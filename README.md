@@ -22,26 +22,27 @@ Os dados utilizados no projeto são disponibilizados pela API do GitHub.
 
 
 ![Figura 1 - Tela inicial.](./assets/tela-inicial.png)
-<div style="text-align:center">Figura 1 - Tela Inicial.</div>
 
-
-
+<center> Figura 1 - Tela Inicial.</center>
 
 
 ![Figura 2 - Busca em andamento.](./assets/busca1.png)
-<div style="text-align:center">Figura 2 - Exemplo de Busca.</div>
 
+<center> Figura 2 - Exemplo de Busca.</center>
 
 
 ![Figura 3 - Busca em andamento.](./assets/busca2.png)
-<div style="text-align:center">Figura 3 - Exemplo de Busca.</div>
+
+<center> Figura 3 - Exemplo de Busca.</center>
 
 
 ![](./assets/configuracoes-busca.png)
-<div style="text-align:center">Figura 4 - Configurações de Busca.</div>
+
+<center> Figura 4 - Configurações de Busca.</center>
 
 ![](./assets/informacoes.png)
-<div style="text-align:center">Figura 5 - Aba de informações.</div>
+
+<center> Figura 5 - Aba de informações.</center>
 
 ## Instalação
 
@@ -82,6 +83,13 @@ Para usar o projeto, acesse a página ([local](http://localhost:4200) ou no [git
 ## Outros
 
 As consultas à API do GitHub possuem um limite para usuários não autenticados (1000 requisições por hora), caso você deseje fazer várias buscas, esse número de requisições irá ultrapassar o limite, por esse motivo é possível configurar um token de acesso à API no projeto, basta clicar no ícone de configurações e preencher o campo 'token' com o seu token de acesso.  
+
+
+## Apresentação 
+
+<video src='./assets/gravacao.mp4'></video>
+
+[Arquivo de apresentação](./assets/gravacao.mp4)
 
 
 ## Referências
