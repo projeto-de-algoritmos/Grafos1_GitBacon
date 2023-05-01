@@ -1,13 +1,13 @@
-import {Component} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ApiService} from "./service/api.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ApiService } from "./service/api.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
     public githubTokenInfo = 'https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token';
@@ -35,15 +35,20 @@ export class AppComponent {
     );
 
     constructor(private formBuilder: FormBuilder,
-                private apiService: ApiService,
-                private snackBar: MatSnackBar
+        private apiService: ApiService,
+        private snackBar: MatSnackBar
     ) {
     }
 
+    get providedToken() {
+        return this.formBusca.get('token')?.value;
+    }
 
     private handleError(e: HttpErrorResponse, inputValue: string) {
         if (e.status == 404)
             this.notify(`Usuário ${inputValue} não encontrado no GitHub.`, true)
+        else if (e.status == 403)
+            this.notify('Limite de acessos à API Rest atingido. Aguarde uma hora para tentar novamente ou forneça um token, clicando no ícone ⚙️.', true)
         else
             this.notify(`Erro au buscar usuário ${inputValue}. Descrição: ${e.message}`, true)
     }
@@ -52,7 +57,7 @@ export class AppComponent {
         const inputValue = this.formBusca.get(formControlName)?.value
         if (inputValue) {
             if (formControlName == this.lblUserA) {
-                this.apiService.getGithubUser(inputValue).subscribe(
+                this.apiService.getGithubUser(inputValue, this.providedToken).subscribe(
                     user => {
                         this.usuarioA = user.avatar_url;
                         this.validyStatus['userA'] = true;
@@ -61,7 +66,7 @@ export class AppComponent {
                     error => this.handleError(error as HttpErrorResponse, inputValue)
                 );
             } else {
-                this.apiService.getGithubUser(inputValue).subscribe(
+                this.apiService.getGithubUser(inputValue, this.providedToken).subscribe(
                     user => {
                         this.usuarioB = user.avatar_url;
                         this.validyStatus['userB'] = true;
@@ -97,7 +102,7 @@ export class AppComponent {
     public notify(msg: string, isError = false) {
         const emoji = isError ? '⚠️' : '✅';
         const message = `${emoji} ${msg}`
-        this.snackBar.open(message, 'Fechar', {duration: 2000});
+        this.snackBar.open(message, 'Fechar', { duration: 2000 });
     }
 }
 
