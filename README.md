@@ -51,7 +51,7 @@ Para desenvolver no projeto:
 npm install angular@15.2.0 -g
 ```
 
-- É **necessário** instalar as dependências do projeto, executando o seguinte comando na pasta raiz do projeto (a mesma onde se encontra o [package-lock.json](./package-lock.json).
+- É **necessário** instalar as dependências do projeto, executando o seguinte comando na pasta raiz do projeto (a mesma onde se encontra o [package.json](./package.json).
 
 ```shell
 npm install 
@@ -66,7 +66,7 @@ Para rodar o projeto localmente:
 npm run start 
 ```
 
-> Esse comando executará o script start definido no [package-lock.json](./package-lock.json), ou seja, iniciará o servidor angular expondo a porta padrão: 4200.
+> Esse comando executará o script start definido no [package.json](./package.json), ou seja, iniciará o servidor angular expondo a porta padrão: 4200.
 
 > Confira o aplicativo rodando em: [http://localhost:4200](http://localhost:4200). :)
 
