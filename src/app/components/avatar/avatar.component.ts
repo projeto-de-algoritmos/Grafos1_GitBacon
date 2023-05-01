@@ -25,6 +25,9 @@ export class AvatarComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         this.loading = true;
         if (changes['avatarSrc'] && changes['avatarSrc'].currentValue != null) {
+            if (changes['user']){
+                this.githubUser=`https://github.com/${changes['user'].currentValue}`
+            }
             this.avatarSrc = changes['avatarSrc'].currentValue;
             this.showAvatar = true;
             this.loading = false;

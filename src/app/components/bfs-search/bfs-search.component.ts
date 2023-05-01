@@ -1,6 +1,8 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {ApiService} from "../../service/api.service";
-import {GitUser} from "../../model/git_user";
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ApiService } from "../../service/api.service";
+import { GitUser } from "../../model/git_user";
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 type no = { login: string, path: any[] }
@@ -8,8 +10,7 @@ type no = { login: string, path: any[] }
 @Component({
     selector: 'app-bfs-search',
     templateUrl: './bfs-search.component.html',
-    styleUrls: ['./bfs-search.component.scss'],
-    providers: [{provide: 'token', useValue: 'providedToken' }]
+    styleUrls: ['./bfs-search.component.scss']
 })
 export class BfsSearchComponent implements OnChanges {
     @Input() public userOrigin!: string;
@@ -17,13 +18,13 @@ export class BfsSearchComponent implements OnChanges {
     @Input() maxLevel: number = 6;
     @Input() maxVisitedUsers: number = 2000;
     @Input() providedToken: string = '';
-    public path?: string [];
+    public path?: string[];
     public messages: string[] = [];
 
     public kevinBaconNumber?: number = undefined;
 
 
-    constructor(private service: ApiService) {
+    constructor(private service: ApiService, private snackBar: MatSnackBar) {
 
 
     }
@@ -37,8 +38,8 @@ export class BfsSearchComponent implements OnChanges {
 
     private formatArray(array: any[], qtd = 7): any[] {
         if (array.length > qtd) {
-            const start = array.length - qtd;
-            return [array[0], '...', ...array.slice(start)]
+            const start = array.length - qtd + 1;
+            return [array[0], array[1], '...', ...array.slice(start)]
         }
         return array;
     }
@@ -60,11 +61,29 @@ export class BfsSearchComponent implements OnChanges {
     }
 
 
+
+
+    public notify(msg: string, isError = false) {
+        const emoji = isError ? '⚠️' : '✅';
+        const message = `${emoji} ${msg}`
+        this.snackBar.open(message, 'Fechar', { duration: 2000 });
+    }
+
+    private handleError(e: HttpErrorResponse, inputValue: string) {
+        if (e.status == 404)
+            this.notify(`Usuário ${inputValue} não encontrado no GitHub.`, true)
+        else if (e.status == 403)
+            this.notify('Limite de acessos à API Rest atingido. Aguarde uma hora para tentar novamente ou forneça um token, clicando no ícone ⚙️.', true)
+        else
+            this.notify(`Erro ao buscar seguidores do usuário ${inputValue}. Descrição: ${e.message}`, true)
+    }
+
+
     async bfs(): Promise<string[]> {
 
         // Variables used in messages formatting
         let qtdVisitedUsers: number = 0;
-        let visitedUsers: string = '';
+        let visitedUsers: string[] = [];
 
         // Time control
 
@@ -73,7 +92,7 @@ export class BfsSearchComponent implements OnChanges {
 
         // Variables
         const originUsername = this.userOrigin;
-        let originUser: no = {login: originUsername, path: [originUsername]}
+        let originUser: no = { login: originUsername, path: [originUsername] }
         let queue = [originUser];
         let visited = new Set();
         let level = 0;
@@ -87,14 +106,11 @@ export class BfsSearchComponent implements OnChanges {
         }
         const visit = (user?: no) => {
             if (!visited.has(user))
-                if (qtdVisitedUsers == 0)
-                    visitedUsers = visitedUsers + user!.login
-                else
-                    visitedUsers = visitedUsers + ', ' + user!.login
+                visitedUsers.push(user!.login)
             qtdVisitedUsers++;
             this.msg(`Visiting user: ${user?.login} | Current level: L${level < 0 ? 0 : level} <br/>
                             Visited GitHub ${qtdVisitedUsers} user(s) until now: 
-                            [${visitedUsers}]`);
+                            [${this.formatArray(visitedUsers, 3)}]`);
             visited.add(user);
         }
 
@@ -110,7 +126,8 @@ export class BfsSearchComponent implements OnChanges {
         while (queue.length > 0 && level <= this.maxLevel && qtdVisitedUsers <= this.maxVisitedUsers) {
             let currentUser = queue.shift()!;
             visit(currentUser);
-            const neighbors = await this.service.getFollowing(currentUser.login).toPromise()
+            const neighbors = await this.service.getFollowing(currentUser.login, this.providedToken).toPromise()
+                .catch(error => this.handleError(error, currentUser.login));
             for (currentNeighbor of neighbors!.map((viz: GitUser) => ({
                 login: viz.login, path: [viz.login]
             }))!) {
